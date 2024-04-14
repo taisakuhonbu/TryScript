@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TryScript.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="FileList" Type="System.String" Scope="User">
+      <Value Profile="(Default)">FileList.txt</Value>
+    </Setting>
+    <Setting Name="CSS" Type="System.String" Scope="User">
+      <Value Profile="(Default)">TryScript.css</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
