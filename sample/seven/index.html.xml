@@ -1,0 +1,25 @@
+<root>
+  <topic>
+    <position type="none" />
+    <desc>
+      <h1>index.html を解説します</h1>
+    </desc>
+  </topic>
+  <topic>
+    <position type="line" find="11,1" />
+    <desc>サーバーが持っているアクセス数を返す CGI 呼び出しです。変数に文字列を入れるソースコードが返ってきます。</desc>
+  </topic>
+  <topic>
+    <position type="line" find="12,1" />
+    <desc>サーバーがカウントアップしたアクセス数を表示する javasript ソースコードです。</desc>
+  </topic>
+  <topic>
+    <position type="line" find="17,15" />
+    <desc>画像を置きます。閉じタグで改行すると表示でスペースが間に入ってしまうので、要素内で改行してスペースを作らせないテクニックです。<br />
+カウンターに使う画像を読み込ませる意味もあります。</desc>
+  </topic>
+  <topic>
+    <position type="word" find="onload=&quot;initX()&quot;" skip="0" />
+    <desc>コンテンツがロード完了したら、<code>initX</code> を呼び出すという記述です。この関数は counter.js に入っています。</desc>
+  </topic>
+</root>

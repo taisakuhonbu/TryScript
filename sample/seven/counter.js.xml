@@ -1,0 +1,30 @@
+<root>
+  <topic>
+    <position type="none" />
+    <desc>
+      <h1>counter.js はアクセス数を受け取って、表示を変更する関数が入っています</h1>
+    </desc>
+  </topic>
+  <topic>
+    <position type="line" find="1,1" />
+    <desc>javascript の関数定義です。<code>initX</code>という名前で引数をとらない関数です。</desc>
+  </topic>
+  <topic>
+    <position type="line" find="3,1" />
+    <desc>
+      <code>counter</code> という ID を持つ要素をドキュメントの中から探して、<code>counter_div</code> という変数に入れます。</desc>
+  </topic>
+  <topic>
+    <position type="line" find="4,1" />
+    <desc>カウンターの各桁を表示すると画像<code>img</code>要素を取得しますが、ドキュメントからとると関係のない画像も拾ってしまうので、前の行の <code>counter_div</code> の中だけで探します。 <code>digits</code> には要素の配列が入ります。</desc>
+  </topic>
+  <topic>
+    <position type="word" find="for" skip="0" />
+    <desc>画像要素配列の各画像要素にアクセスするための変数 <code>i</code> を画像要素配列の要素数分 0 から一つずつ増やしてループします。</desc>
+  </topic>
+  <topic>
+    <position type="word" find="counter_value" skip="0" />
+    <desc>CGI が返してきた javascript ソースコードに記述されている変数で、アクセス数が入っています。14 文字の 0 から 6 のいずれかの数字の文字列です。<br />
+数字列の <code>i</code> 番目を取り出して、<code>.png</code> を連結したものが桁を表示する画像ファイル名です。これを画像要素の <code>src</code> プロパティーにセットすると、その画像が表示され、アクセス数が表示される仕組みです。</desc>
+  </topic>
+</root>

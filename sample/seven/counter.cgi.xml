@@ -1,0 +1,101 @@
+<root>
+  <topic>
+    <position type="none" />
+    <desc>
+      <h1>アクセスカウンターのサーバー側の CGI プログラムです</h1>
+    </desc>
+  </topic>
+  <topic>
+    <position type="line" find="1,1" />
+    <desc>実体は Ruby スクリプトです。</desc>
+  </topic>
+  <topic>
+    <position type="line" find="3,1" />
+    <desc>アクセス数を覚えるファイルの名前。複数同時アクセスは考慮していません。</desc>
+  </topic>
+  <topic>
+    <position type="line" find="4,1" />
+    <desc>七進数のアクセスカウンターを作ります</desc>
+  </topic>
+  <topic>
+    <position type="line" find="5,1" />
+    <desc>１４桁のアクセスカウンターです。</desc>
+  </topic>
+  <topic>
+    <position type="line" find="7,1" />
+    <desc>この CGI は javascript のソースコードを返します。その中身は文字列で、それを格納する変数名を定義しています。</desc>
+  </topic>
+  <topic>
+    <position type="line" find="9,7" />
+    <desc>最終的な CGI の出力をする関数を定義しています。CGI は標準出力に HTTP Response を書き出して、動的なコンテンツを作るものなので、それをする関数です。</desc>
+  </topic>
+  <topic>
+    <position type="line" find="10,1" />
+    <desc>HTTP Response ヘッダーです。空行がヘッダーとエンティティーの区切りです。</desc>
+  </topic>
+  <topic>
+    <position type="line" find="11,4" />
+    <desc>javascript のソースコードです。<br /><code>counter_value = "00000000000123";</code><br />
+のような中身が作られます。<br /></desc>
+  </topic>
+  <topic>
+    <position type="line" find="17,1" />
+    <desc>アクセス数を文字列表現を持つ変数です。とりあえず <code>0</code> を入れておきます。</desc>
+  </topic>
+  <topic>
+    <position type="word" find="begin" skip="0" />
+    <desc>例外処理付き処理の開始です。多くの言語での try に相当します。</desc>
+  </topic>
+  <topic>
+    <position type="line" find="20,1" />
+    <desc>ファイルを開きます。File クラスの open というクラスメソッドで、ファイル名とオープンモードを指定します。<code>"r"</code> は読み込みです。成功するとファイルアクセスのためのオブジェクトを返すので、<code>fp</code> で受け取ります。</desc>
+  </topic>
+  <topic>
+    <position type="word" find="read" skip="0" />
+    <desc>指定のバイト数を文字列として読み込みます。読み込めないかもしれないので、例外処理をしています。例外処理といっても、何もしません。</desc>
+  </topic>
+  <topic>
+    <position type="word" find="close" skip="0" />
+    <desc>ファイルを閉じます。この記述が不要になる書き方もあります。</desc>
+  </topic>
+  <topic>
+    <position type="word" find="rescue" skip="0" />
+    <desc>例外が発生するとここに来ます。多くの言語での catch に相当します。</desc>
+  </topic>
+  <topic>
+    <position type="word" find="strCount.reverse!()" skip="0" />
+    <desc>文字列を逆順にします。<code>reverse</code> というメソッドもあり、逆順にした新しい文字列が作られます。</desc>
+  </topic>
+  <topic>
+    <position type="line" find="31,3" />
+    <desc>１４桁に足りないときはゼロを追加します。</desc>
+  </topic>
+  <topic>
+    <position type="line" find="35,6" />
+    <desc>数字列を一桁ずつの数値の配列にします。</desc>
+  </topic>
+  <topic>
+    <position type="line" find="42,12" />
+    <desc>カウントアップします。<br /><code>i</code> は各桁へのアクセスで、小さい桁から始めます。<br />
+ここの <code>begin</code> は、例外処理でなくループの開始で、<code>bCarry</code> が真のときに戻ってきます。<br />
+七進数で使える 6 数字は 6 までなので、6 以上だったら、桁上がりです。キャリーをオンにして、その桁をゼロにして、次の桁チェックをさせます。6 より小さかったらその桁をひとつ上げてキャリーをオフにします。<br /></desc>
+  </topic>
+  <topic>
+    <position type="line" find="55,6" />
+    <desc>数値の配列を数字列に戻します。</desc>
+  </topic>
+  <topic>
+    <position type="word" find="strCount.reverse!()" skip="1" />
+    <desc>再び逆順にします。</desc>
+  </topic>
+  <topic>
+    <position type="line" find="64,11" />
+    <desc>ファイルに保存します。<br /><code>"w"</code> が書き込みという意味です。これを指定すると、ファイルの中身はなくなります。<br />
+<code>&lt;&lt;</code> で書き込み実施です。<br />
+書き込みに失敗したら、全桁ゼロに戻します。</desc>
+  </topic>
+  <topic>
+    <position type="word" find="counter_output" skip="1" />
+    <desc>HTTP Response を出力して終了です。</desc>
+  </topic>
+</root>
