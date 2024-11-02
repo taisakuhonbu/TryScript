@@ -28,10 +28,19 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+            this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.textScript = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.textTotal = new System.Windows.Forms.TextBox();
+            this.textCurrent = new System.Windows.Forms.TextBox();
             this.buttonFileList = new System.Windows.Forms.Button();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.panelCompose = new System.Windows.Forms.Panel();
+            this.contextMenuStripCompose = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.contextMenuItemSaveMinWidth = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuItemSaveMaxWidth = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuItemSaveRatio = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuItemNew = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.numericUDLines = new System.Windows.Forms.NumericUpDown();
             this.numericUDLineFrom = new System.Windows.Forms.NumericUpDown();
@@ -57,13 +66,11 @@
             this.buttonNextFile = new System.Windows.Forms.Button();
             this.buttonPrevFile = new System.Windows.Forms.Button();
             this.comboBoxFiles = new System.Windows.Forms.ComboBox();
-            this.textCurrent = new System.Windows.Forms.TextBox();
-            this.textTotal = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.contextMenuStripCompose.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUDLines)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUDLineFrom)).BeginInit();
@@ -86,7 +93,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.textTotal);
             this.splitContainer1.Panel2.Controls.Add(this.textCurrent);
             this.splitContainer1.Panel2.Controls.Add(this.buttonFileList);
-            this.splitContainer1.Panel2.Controls.Add(this.panel2);
+            this.splitContainer1.Panel2.Controls.Add(this.panelCompose);
             this.splitContainer1.Panel2.Controls.Add(this.panel1);
             this.splitContainer1.Panel2.Controls.Add(this.radioScriptSize4);
             this.splitContainer1.Panel2.Controls.Add(this.radioScriptSize3);
@@ -103,6 +110,8 @@
             this.splitContainer1.SplitterDistance = 440;
             this.splitContainer1.SplitterWidth = 7;
             this.splitContainer1.TabIndex = 0;
+            this.splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer1_SplitterMoved);
+            this.splitContainer1.Resize += new System.EventHandler(this.splitContainer1_Resize);
             // 
             // textScript
             // 
@@ -119,6 +128,34 @@
             this.textScript.TabIndex = 0;
             this.textScript.WordWrap = false;
             // 
+            // label2
+            // 
+            this.label2.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(115, 75);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(11, 12);
+            this.label2.TabIndex = 15;
+            this.label2.Text = "/";
+            // 
+            // textTotal
+            // 
+            this.textTotal.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.textTotal.Location = new System.Drawing.Point(132, 72);
+            this.textTotal.Name = "textTotal";
+            this.textTotal.ReadOnly = true;
+            this.textTotal.Size = new System.Drawing.Size(39, 19);
+            this.textTotal.TabIndex = 14;
+            // 
+            // textCurrent
+            // 
+            this.textCurrent.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.textCurrent.Location = new System.Drawing.Point(70, 72);
+            this.textCurrent.Name = "textCurrent";
+            this.textCurrent.ReadOnly = true;
+            this.textCurrent.Size = new System.Drawing.Size(39, 19);
+            this.textCurrent.TabIndex = 14;
+            // 
             // buttonFileList
             // 
             this.buttonFileList.Location = new System.Drawing.Point(173, 5);
@@ -129,16 +166,55 @@
             this.buttonFileList.UseVisualStyleBackColor = true;
             this.buttonFileList.Click += new System.EventHandler(this.buttonFileList_Click);
             // 
-            // panel2
+            // panelCompose
             // 
-            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel2.BackColor = System.Drawing.SystemColors.Control;
-            this.panel2.Location = new System.Drawing.Point(247, 0);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(40, 40);
-            this.panel2.TabIndex = 12;
-            this.panel2.DoubleClick += new System.EventHandler(this.panel2_DoubleClick);
-            this.panel2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panel2_MouseClick);
+            this.panelCompose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelCompose.BackColor = System.Drawing.SystemColors.Control;
+            this.panelCompose.ContextMenuStrip = this.contextMenuStripCompose;
+            this.panelCompose.Location = new System.Drawing.Point(226, 0);
+            this.panelCompose.Name = "panelCompose";
+            this.panelCompose.Size = new System.Drawing.Size(40, 40);
+            this.panelCompose.TabIndex = 12;
+            this.panelCompose.DoubleClick += new System.EventHandler(this.panel2_DoubleClick);
+            // 
+            // contextMenuStripCompose
+            // 
+            this.contextMenuStripCompose.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.contextMenuItemSaveMinWidth,
+            this.contextMenuItemSaveMaxWidth,
+            this.contextMenuItemSaveRatio,
+            this.contextMenuItemNew});
+            this.contextMenuStripCompose.Name = "contextMenuStrip1";
+            this.contextMenuStripCompose.Size = new System.Drawing.Size(289, 92);
+            this.contextMenuStripCompose.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripCompose_Opening);
+            // 
+            // contextMenuItemSaveMinWidth
+            // 
+            this.contextMenuItemSaveMinWidth.Name = "contextMenuItemSaveMinWidth";
+            this.contextMenuItemSaveMinWidth.Size = new System.Drawing.Size(288, 22);
+            this.contextMenuItemSaveMinWidth.Text = "現在のスプリッター左の幅を最小幅として保存";
+            this.contextMenuItemSaveMinWidth.Click += new System.EventHandler(this.contextMenuItemSaveMinWidth_Click);
+            // 
+            // contextMenuItemSaveMaxWidth
+            // 
+            this.contextMenuItemSaveMaxWidth.Name = "contextMenuItemSaveMaxWidth";
+            this.contextMenuItemSaveMaxWidth.Size = new System.Drawing.Size(288, 22);
+            this.contextMenuItemSaveMaxWidth.Text = "現在のスプリッター左の幅を最大値として保存";
+            this.contextMenuItemSaveMaxWidth.Click += new System.EventHandler(this.contextMenuItemSaveMaxWidth_Click);
+            // 
+            // contextMenuItemSaveRatio
+            // 
+            this.contextMenuItemSaveRatio.Name = "contextMenuItemSaveRatio";
+            this.contextMenuItemSaveRatio.Size = new System.Drawing.Size(288, 22);
+            this.contextMenuItemSaveRatio.Text = "現在にスプリッターの比率を保存";
+            this.contextMenuItemSaveRatio.Click += new System.EventHandler(this.contextMenuItemSaveRatio_Click);
+            // 
+            // contextMenuItemNew
+            // 
+            this.contextMenuItemNew.Name = "contextMenuItemNew";
+            this.contextMenuItemNew.Size = new System.Drawing.Size(288, 22);
+            this.contextMenuItemNew.Text = "新規";
+            this.contextMenuItemNew.Click += new System.EventHandler(this.contextMenuItemNew_Click);
             // 
             // panel1
             // 
@@ -162,7 +238,7 @@
             this.panel1.Controls.Add(this.buttonSaveNext);
             this.panel1.Location = new System.Drawing.Point(7, 99);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(259, 419);
+            this.panel1.Size = new System.Drawing.Size(238, 419);
             this.panel1.TabIndex = 11;
             this.panel1.Visible = false;
             // 
@@ -204,7 +280,7 @@
             // buttonUpdate
             // 
             this.buttonUpdate.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.buttonUpdate.Location = new System.Drawing.Point(82, 389);
+            this.buttonUpdate.Location = new System.Drawing.Point(72, 389);
             this.buttonUpdate.Name = "buttonUpdate";
             this.buttonUpdate.Size = new System.Drawing.Size(91, 23);
             this.buttonUpdate.TabIndex = 10;
@@ -216,7 +292,7 @@
             // 
             this.label1.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(97, 40);
+            this.label1.Location = new System.Drawing.Point(87, 40);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(52, 12);
             this.label1.TabIndex = 9;
@@ -225,7 +301,7 @@
             // numericUDSkips
             // 
             this.numericUDSkips.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.numericUDSkips.Location = new System.Drawing.Point(155, 38);
+            this.numericUDSkips.Location = new System.Drawing.Point(145, 38);
             this.numericUDSkips.Name = "numericUDSkips";
             this.numericUDSkips.Size = new System.Drawing.Size(54, 19);
             this.numericUDSkips.TabIndex = 8;
@@ -255,7 +331,7 @@
             // buttonCheckSelection
             // 
             this.buttonCheckSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCheckSelection.Location = new System.Drawing.Point(81, 97);
+            this.buttonCheckSelection.Location = new System.Drawing.Point(60, 97);
             this.buttonCheckSelection.Name = "buttonCheckSelection";
             this.buttonCheckSelection.Size = new System.Drawing.Size(91, 23);
             this.buttonCheckSelection.TabIndex = 5;
@@ -269,7 +345,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textFind.Location = new System.Drawing.Point(3, 3);
             this.textFind.Name = "textFind";
-            this.textFind.Size = new System.Drawing.Size(249, 19);
+            this.textFind.Size = new System.Drawing.Size(228, 19);
             this.textFind.TabIndex = 4;
             // 
             // textEditDesc
@@ -280,7 +356,7 @@
             this.textEditDesc.Location = new System.Drawing.Point(3, 126);
             this.textEditDesc.Multiline = true;
             this.textEditDesc.Name = "textEditDesc";
-            this.textEditDesc.Size = new System.Drawing.Size(249, 257);
+            this.textEditDesc.Size = new System.Drawing.Size(228, 257);
             this.textEditDesc.TabIndex = 3;
             // 
             // buttonSavePrev
@@ -297,7 +373,7 @@
             // buttonSaveNext
             // 
             this.buttonSaveNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSaveNext.Location = new System.Drawing.Point(176, 389);
+            this.buttonSaveNext.Location = new System.Drawing.Point(155, 389);
             this.buttonSaveNext.Name = "buttonSaveNext";
             this.buttonSaveNext.Size = new System.Drawing.Size(76, 23);
             this.buttonSaveNext.TabIndex = 1;
@@ -364,13 +440,13 @@
             this.webBrowser1.Location = new System.Drawing.Point(7, 99);
             this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser1.Name = "webBrowser1";
-            this.webBrowser1.Size = new System.Drawing.Size(259, 419);
+            this.webBrowser1.Size = new System.Drawing.Size(238, 419);
             this.webBrowser1.TabIndex = 5;
             // 
             // buttonNextDesc
             // 
             this.buttonNextDesc.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonNextDesc.Location = new System.Drawing.Point(191, 70);
+            this.buttonNextDesc.Location = new System.Drawing.Point(170, 70);
             this.buttonNextDesc.Name = "buttonNextDesc";
             this.buttonNextDesc.Size = new System.Drawing.Size(75, 23);
             this.buttonNextDesc.TabIndex = 4;
@@ -391,7 +467,7 @@
             // buttonNextFile
             // 
             this.buttonNextFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonNextFile.Location = new System.Drawing.Point(236, 524);
+            this.buttonNextFile.Location = new System.Drawing.Point(215, 524);
             this.buttonNextFile.Name = "buttonNextFile";
             this.buttonNextFile.Size = new System.Drawing.Size(30, 23);
             this.buttonNextFile.TabIndex = 1;
@@ -418,37 +494,9 @@
             this.comboBoxFiles.FormattingEnabled = true;
             this.comboBoxFiles.Location = new System.Drawing.Point(39, 526);
             this.comboBoxFiles.Name = "comboBoxFiles";
-            this.comboBoxFiles.Size = new System.Drawing.Size(191, 20);
+            this.comboBoxFiles.Size = new System.Drawing.Size(170, 20);
             this.comboBoxFiles.TabIndex = 0;
             this.comboBoxFiles.SelectedIndexChanged += new System.EventHandler(this.comboBoxFiles_SelectedIndexChanged);
-            // 
-            // textCurrent
-            // 
-            this.textCurrent.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.textCurrent.Location = new System.Drawing.Point(84, 72);
-            this.textCurrent.Name = "textCurrent";
-            this.textCurrent.ReadOnly = true;
-            this.textCurrent.Size = new System.Drawing.Size(39, 19);
-            this.textCurrent.TabIndex = 14;
-            // 
-            // textTotal
-            // 
-            this.textTotal.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.textTotal.Location = new System.Drawing.Point(146, 72);
-            this.textTotal.Name = "textTotal";
-            this.textTotal.ReadOnly = true;
-            this.textTotal.Size = new System.Drawing.Size(39, 19);
-            this.textTotal.TabIndex = 14;
-            // 
-            // label2
-            // 
-            this.label2.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(129, 75);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(11, 12);
-            this.label2.TabIndex = 15;
-            this.label2.Text = "/";
             // 
             // Form1
             // 
@@ -465,6 +513,7 @@
             this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.contextMenuStripCompose.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUDLines)).EndInit();
@@ -503,11 +552,16 @@
 		private System.Windows.Forms.NumericUpDown numericUDLines;
 		private System.Windows.Forms.NumericUpDown numericUDLineFrom;
 		private System.Windows.Forms.RadioButton radioLineFind;
-		private System.Windows.Forms.Panel panel2;
+		private System.Windows.Forms.Panel panelCompose;
         private System.Windows.Forms.Button buttonFileList;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textTotal;
         private System.Windows.Forms.TextBox textCurrent;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripCompose;
+        private System.Windows.Forms.ToolStripMenuItem contextMenuItemSaveMinWidth;
+        private System.Windows.Forms.ToolStripMenuItem contextMenuItemSaveMaxWidth;
+        private System.Windows.Forms.ToolStripMenuItem contextMenuItemSaveRatio;
+        private System.Windows.Forms.ToolStripMenuItem contextMenuItemNew;
     }
 }
 

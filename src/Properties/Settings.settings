@@ -8,5 +8,14 @@
     <Setting Name="CSS" Type="System.String" Scope="User">
       <Value Profile="(Default)">TryScript.css</Value>
     </Setting>
+    <Setting Name="LeftMin" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">15</Value>
+    </Setting>
+    <Setting Name="LeftMax" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">450</Value>
+    </Setting>
+    <Setting Name="LeftRatio" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">35</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

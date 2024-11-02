@@ -20,7 +20,7 @@ namespace TryScript
 		private bool IsValidString(object s)
 		{
 			String str = s as String;
-			if(str == null)
+			if (str == null)
 			{
 				return false;
 			}
@@ -29,7 +29,7 @@ namespace TryScript
 
 		private void SetFile0()
 		{
-			if(comboBoxFiles.Items.Count > 0)
+			if (comboBoxFiles.Items.Count > 0)
 			{
 				comboBoxFiles.SelectedIndex = 0;
 			}
@@ -73,10 +73,11 @@ namespace TryScript
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
-			splitterLeftWidth = splitContainer1.SplitterDistance;
-
+			splitterLeftMin = Properties.Settings.Default.LeftMin;
+			splitterLeftMax = Properties.Settings.Default.LeftMax;
+			splitterLeftRatio = Properties.Settings.Default.LeftRatio;
 			String filelist = Properties.Settings.Default.FileList;
-			if(IsValidString(filelist) == false)
+			if (IsValidString(filelist) == false)
 			{
 				return;
 			}
@@ -86,7 +87,7 @@ namespace TryScript
 		{
 			OpenFileDialog d = new OpenFileDialog();
 			d.Filter = "FileList.txt|FileList.txt";
-			if(d.ShowDialog() == DialogResult.OK)
+			if (d.ShowDialog() == DialogResult.OK)
 			{
 				ReadFileList(d.FileName);
 			}
@@ -104,6 +105,14 @@ namespace TryScript
 			f += ".xml";
 			doc = new System.Xml.XmlDocument();
 			doc.Load(f);
+			String dir = System.IO.Path.GetDirectoryName(f);
+			System.Xml.XmlNodeList images = doc.GetElementsByTagName("img");
+			foreach(System.Xml.XmlNode node in images)
+			{
+				System.Xml.XmlElement img = node as System.Xml.XmlElement;
+				String src = img.GetAttribute("src");
+				img.SetAttribute("src", System.IO.Path.Combine(dir, src));
+			}
 			topics = doc.GetElementsByTagName("topic");
 			current = 0;
 			SetDescription();
@@ -111,8 +120,10 @@ namespace TryScript
 			textTotal.Text = topics.Count.ToString();
 		}
 
-		private int splitterWholeWidth;
-		private int splitterLeftWidth;
+		private int splitterLeftMin;
+		private int splitterLeftMax;
+		private decimal splitterLeftRatio;
+		private bool splitterRatioChangeable = false;
 
 		private String pathFilelist;
 		private System.Xml.XmlDocument doc;
@@ -125,23 +136,12 @@ namespace TryScript
 			System.Xml.XmlNodeList desc = e.GetElementsByTagName("desc");
 			// ハイライトする位置
 			if (position.Count == 0)
-			{
+			{   // 指定がないので、ハイライトもなし
 				textScript.Select(0, 0);
+				splitContainer1.SplitterDistance = splitterLeftMin;
 			}
 			else
 			{
-				if (splitContainer1.SplitterDistance != splitterLeftWidth)
-				{
-					if (splitterWholeWidth == splitContainer1.Width)
-					{
-						splitContainer1.SplitterDistance = splitterLeftWidth;
-					}
-					else
-					{
-						splitContainer1.SplitterDistance = (int)(splitContainer1.Width * ((decimal)splitterLeftWidth + splitContainer1.SplitterWidth / 2m) / splitterWholeWidth);
-					}
-				}
-
 				System.Xml.XmlElement p = position[0] as System.Xml.XmlElement;
 
 				String find = p.GetAttribute("find");
@@ -170,7 +170,9 @@ namespace TryScript
 				String back = "</body></html>";
 				String p0 = "<p>";
 				String p1 = "</p>";
-				if (System.IO.File.Exists(src))
+
+
+                if (System.IO.File.Exists(src))
 				{
 					front = String.Format(front0, "<link rel=\"stylesheet\" type=\"text/css\" href=\"" + css + "\"/>");
 				}
@@ -216,7 +218,9 @@ namespace TryScript
 					{
 						textScript.SelectionStart = i;
 						textScript.SelectionLength = find.Length;
-						break;
+						splitContainer1.SplitterDistance = (int)(splitContainer1.Size.Width * splitterLeftRatio / 100);
+                        splitterRatioChangeable = true;
+                        break;
 					}
 				}
 				else if (type.ToLower() == "regex")
@@ -234,7 +238,9 @@ namespace TryScript
 					{
 						textScript.SelectionStart = i;
 						textScript.SelectionLength = m.Length;
-						break;
+                        splitContainer1.SplitterDistance = (int)(splitContainer1.Size.Width * splitterLeftRatio / 100);
+                        splitterRatioChangeable = true;
+                        break;
 					}
 				}
 				else if (type.ToLower() == "line")
@@ -268,7 +274,7 @@ namespace TryScript
 							}
 						}
 					}
-					catch(Exception)
+					catch (Exception)
 					{
 						break;
 					}
@@ -289,7 +295,7 @@ namespace TryScript
 					while (m > 0)
 					{
 						j = textScript.Text.IndexOf('\n', i);
-						if(j < 0)
+						if (j < 0)
 						{
 							if (findonly == false)
 							{
@@ -306,7 +312,7 @@ namespace TryScript
 						k = textScript.Text.IndexOf('\n', i);
 						if (k < 0)
 						{
-							if(n == 1)
+							if (n == 1)
 							{
 								k = textScript.Text.Length;
 								break;
@@ -325,22 +331,28 @@ namespace TryScript
 					{
 						textScript.SelectionStart = j;
 						textScript.SelectionLength = k - j;
-					}
-					return j;
+                        splitContainer1.SplitterDistance = (int)(splitContainer1.Size.Width * splitterLeftRatio / 100);
+                        splitterRatioChangeable = true;
+                    }
+                    return j;
 				}
 				else
 				{
 					if (findonly == false)
 					{
-						splitterWholeWidth = splitContainer1.Width;
-						splitterLeftWidth = splitContainer1.SplitterDistance;
-						splitContainer1.SplitterDistance = 0;
+						splitterRatioChangeable = false;
+                        splitContainer1.SplitterDistance = splitterLeftMin;
 						textScript.Select(0, 0);
 					}
 				}
 				i += 1;
 				n--;
 			} while (n >= 0);
+			
+			if(splitContainer1.SplitterDistance > splitterLeftMax)
+			{
+				splitContainer1.SplitterDistance = splitterLeftMax;
+			}
 
 			numericUDSkips.Value = skip;
 			textFind.Text = find;
@@ -351,7 +363,7 @@ namespace TryScript
 
 		private void buttonNextDesc_Click(object sender, EventArgs e)
 		{
-			if(topics.Count > current + 1)
+			if (topics.Count > current + 1)
 			{
 				current += 1;
 				SetDescription();
@@ -360,7 +372,7 @@ namespace TryScript
 
 		private void buttonPrevDesc_Click(object sender, EventArgs e)
 		{
-			if(0 <= current - 1)
+			if (0 <= current - 1)
 			{
 				current -= 1;
 				SetDescription();
@@ -369,7 +381,7 @@ namespace TryScript
 
 		private void buttonNextFile_Click(object sender, EventArgs e)
 		{
-			if(comboBoxFiles.Items.Count > comboBoxFiles.SelectedIndex + 1)
+			if (comboBoxFiles.Items.Count > comboBoxFiles.SelectedIndex + 1)
 			{
 				comboBoxFiles.SelectedIndex = comboBoxFiles.SelectedIndex + 1;
 			}
@@ -377,7 +389,7 @@ namespace TryScript
 
 		private void buttonPrevFile_Click(object sender, EventArgs e)
 		{
-			if(0 <= comboBoxFiles.SelectedIndex - 1)
+			if (0 <= comboBoxFiles.SelectedIndex - 1)
 			{
 				comboBoxFiles.SelectedIndex = comboBoxFiles.SelectedIndex - 1;
 			}
@@ -514,43 +526,98 @@ namespace TryScript
 		private void panel2_DoubleClick(object sender, EventArgs e)
 		{
 			panel1.Visible = !panel1.Visible;
-			if(panel1.Visible == false)
-            {
+			if (panel1.Visible == false)
+			{
 				SetDescription();
 			}
-			panel2.BackColor = Color.DarkBlue;
+			panelCompose.BackColor = Color.DarkBlue;
 		}
 
-        private void panel2_MouseClick(object sender, MouseEventArgs e)
+		private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
         {
-			panel2.BackColor = Color.DarkBlue;
-			if (e.Button == MouseButtons.Right)
+			if (splitterRatioChangeable)
 			{
-				OpenFileDialog d = new OpenFileDialog();
-				d.Multiselect = true;
-				if (d.ShowDialog() == DialogResult.OK)
+				decimal left = splitContainer1.SplitterDistance;
+				decimal whole = splitContainer1.Size.Width;
+				splitterLeftRatio = left / whole * 100;
+			}
+        }
+        private void splitContainer1_Resize(object sender, EventArgs e)
+        {
+			if(splitContainer1.SplitterDistance > splitterLeftMax)
+			{
+				splitContainer1.SplitterDistance = splitterLeftMax;
+			}
+        }
+
+        private void contextMenuItemSaveMinWidth_Click(object sender, EventArgs e)
+		{
+			splitterLeftMin = splitContainer1.SplitterDistance;
+			Properties.Settings.Default.LeftMin = splitContainer1.SplitterDistance;
+			Properties.Settings.Default.Save();
+		}
+
+		private void contextMenuItemSaveMaxWidth_Click(object sender, EventArgs e)
+		{
+			splitterLeftMax = splitContainer1.SplitterDistance;
+			Properties.Settings.Default.LeftMin = splitContainer1.SplitterDistance;
+			Properties.Settings.Default.Save();
+		}
+
+		private void contextMenuItemSaveRatio_Click(object sender, EventArgs e)
+		{
+			decimal left = splitContainer1.SplitterDistance;
+			decimal whole = splitContainer1.SplitterWidth;
+			splitterLeftRatio = left / whole * 100;
+            Properties.Settings.Default.LeftRatio = left / whole * 100;
+			Properties.Settings.Default.Save();
+		}
+
+		private void contextMenuItemNew_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog d = new OpenFileDialog();
+			d.Multiselect = true;
+			if (d.ShowDialog() == DialogResult.OK)
+			{
+				String dir = System.IO.Path.GetDirectoryName(d.FileNames[0]);
+				String filelist = System.IO.Path.Combine(dir, "FileList.txt");
+				System.IO.StreamWriter w0 = new System.IO.StreamWriter(filelist);
+				foreach (String f in d.FileNames)
 				{
-					String dir = System.IO.Path.GetDirectoryName(d.FileNames[0]);
-					String filelist = System.IO.Path.Combine(dir, "FileList.txt");
-					System.IO.StreamWriter w0 = new System.IO.StreamWriter(filelist);
-					foreach (String f in d.FileNames)
-					{
-						w0.WriteLine(System.IO.Path.GetFileName(f));
-						System.IO.StreamWriter w = new System.IO.StreamWriter(f + ".xml");
-						w.WriteLine("<root>");
-						w.WriteLine("  <topic>");
-						w.WriteLine("    <position type=\"none\"/>");
-						w.WriteLine("    <desc>");
-						w.WriteLine("	   <h1>" + System.IO.Path.GetFileName(f) + " を解説します</h1>");
-						w.WriteLine("    </desc>");
-						w.WriteLine("  </topic>");
-						w.WriteLine("</root>");
-						w.Close();
-					}
-					w0.Close();
-					ReadFileList(filelist);
+					w0.WriteLine(System.IO.Path.GetFileName(f));
+					System.IO.StreamWriter w = new System.IO.StreamWriter(f + ".xml");
+					w.WriteLine("<root>");
+					w.WriteLine("  <topic>");
+					w.WriteLine("    <position type=\"none\"/>");
+					w.WriteLine("    <desc>");
+					w.WriteLine("	   <h1>" + System.IO.Path.GetFileName(f) + " を解説します</h1>");
+					w.WriteLine("    </desc>");
+					w.WriteLine("  </topic>");
+					w.WriteLine("</root>");
+					w.Close();
+				}
+				w0.Close();
+				ReadFileList(filelist);
+			}
+		}
+
+        private void contextMenuStripCompose_Opening(object sender, CancelEventArgs e)
+        {
+			if(panelCompose.BackColor == Color.DarkBlue)
+			{
+				if(contextMenuStripCompose.Items.Count == 3)
+				{
+					contextMenuStripCompose.Items.Add(contextMenuItemNew);
+				}
+			}
+			else
+			{
+				if(contextMenuStripCompose.Items.Count > 3)
+				{
+					contextMenuStripCompose.Items.Remove(contextMenuItemNew);
 				}
 			}
         }
+
     }
 }
